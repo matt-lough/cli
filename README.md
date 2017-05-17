@@ -21,8 +21,8 @@ require 'httpclient'
 
 settings = CLI.new do
     option :server, :description => 'server address', :default => 'www.google.com'
-    option :port,	:description => 'server port', :cast => Integer, :default => 80
-    argument :url,	:description => 'URL to GET or POST to if arguments are given'
+    option :port,       :description => 'server port', :cast => Integer, :default => 80
+    argument :url,      :description => 'URL to GET or POST to if arguments are given'
     arguments :post_arguments, :required => false
 end.parse! do |settings|
     fail "invalid URL '#{settings.url}', URL has to start with '/'" unless settings.url =~ /^\//
@@ -37,7 +37,7 @@ begin
         puts c.post_async("http://#{settings.server}:#{settings.port}#{settings.url}", settings.post_arguments.join("\n")).pop.content.read
     end 
 rescue SocketError, Errno::ECONNREFUSED => e
-    puts "Falied to connect: #{e}"
+    puts "Failed to connect: #{e}"
 end
 ```
 
@@ -93,18 +93,18 @@ require 'cli'
 require 'ip'
 
 settings = CLI.new do
-	description 'Example CLI usage for Sinatra server application'
-	version "1.0.0"
-	switch :no_bind,			:description => "Do not bind to TCP socket - useful with -s fastcgi option"
-	switch :no_logging,			:description => "Disable logging"
-	switch :debug,				:description => "Enable debugging"
-	switch :no_optimization,	:description => "Disable size hinting and related optimization (loading, prescaling)"
-	option :bind,				:short => :b, :default => '127.0.0.1', :cast => IP, :description => "HTTP server bind address - use 0.0.0.0 to bind to all interfaces"
-	option :port,				:short => :p, :default => 3100, :cast => Integer, :description => "HTTP server TCP port"
-	option :server,				:short => :s, :default => 'mongrel', :description => "Rack server handler like thin, mongrel, webrick, fastcgi etc."
-	option :limit_memory,		:default => 128*1024**2, :cast => Integer, :description => "Image cache heap memory size limit in bytes"
-	option :limit_map,			:default => 256*1024**2, :cast => Integer, :description => "Image cache memory mapped file size limit in bytes - used when heap memory limit is used up"
-	option :limit_disk,			:default => 0, :cast => Integer, :description => "Image cache temporary file size limit in bytes - used when memory mapped file limit is used up"
+        description 'Example CLI usage for Sinatra server application'
+        version "1.0.0"
+        switch :no_bind,                        :description => "Do not bind to TCP socket - useful with -s fastcgi option"
+        switch :no_logging,                     :description => "Disable logging"
+        switch :debug,                          :description => "Enable debugging"
+        switch :no_optimization,        :description => "Disable size hinting and related optimization (loading, prescaling)"
+        option :bind,                           :short => :b, :default => '127.0.0.1', :cast => IP, :description => "HTTP server bind address - use 0.0.0.0 to bind to all interfaces"
+        option :port,                           :short => :p, :default => 3100, :cast => Integer, :description => "HTTP server TCP port"
+        option :server,                         :short => :s, :default => 'mongrel', :description => "Rack server handler like thin, mongrel, webrick, fastcgi etc."
+        option :limit_memory,           :default => 128*1024**2, :cast => Integer, :description => "Image cache heap memory size limit in bytes"
+        option :limit_map,                      :default => 256*1024**2, :cast => Integer, :description => "Image cache memory mapped file size limit in bytes - used when heap memory limit is used up"
+        option :limit_disk,                     :default => 0, :cast => Integer, :description => "Image cache temporary file size limit in bytes - used when memory mapped file limit is used up"
 end.parse!
 
 # use to set sinatra settings
@@ -115,7 +115,7 @@ sinatra = Sinatra.new
 sinatra.set :environment, 'production'
 sinatra.set :server, settings.server
 sinatra.set :lock, true
-sinatra.set :boundary, "thumnail image data"
+sinatra.set :boundary, "thumbnail image data"
 sinatra.set :logging, (not settings.no_logging)
 sinatra.set :debug, settings.debug
 sinatra.set :optimization, (not settings.no_optimization)
@@ -168,14 +168,14 @@ require 'pathname'
 require 'yaml'
 
 settings = CLI.new do
-	description 'Generate blog posts in given Jekyll directory from input statistics'
-	stdin :log_data,        :cast => YAML, :description => 'statistic data in YAML format'
-	option :location,       :short => :l, :description => 'location name (ex. Dublin, Singapore, Califorina)'
-	option :csv_dir,        :short => :c, :cast => Pathname, :default => 'csv', :description => 'directory name where CSV file will be storred (relative to jekyll-dir)'
-	argument :jekyll_dir,   :cast => Pathname, :default => '/var/lib/vhs/jekyll', :description => 'directory where site source is located'
+        description 'Generate blog posts in given Jekyll directory from input statistics'
+        stdin :log_data,        :cast => YAML, :description => 'statistic data in YAML format'
+        option :location,       :short => :l, :description => 'location name (ex. Dublin, Singapore, California)'
+        option :csv_dir,        :short => :c, :cast => Pathname, :default => 'csv', :description => 'directory name where CSV file will be storred (relative to jekyll-dir)'
+        argument :jekyll_dir,   :cast => Pathname, :default => '/var/lib/vhs/jekyll', :description => 'directory where site source is located'
 end.parse! do |settings|
-	fail 'jekyll-dir is not a directory' unless settings.jekyll_dir.directory?
-	fail '--csv-dir is not a directory (relative to jekyll-dir)' unless (settings.jekyll_dir + settings.csv_dir).directory?
+        fail 'jekyll-dir is not a directory' unless settings.jekyll_dir.directory?
+        fail '--csv-dir is not a directory (relative to jekyll-dir)' unless (settings.jekyll_dir + settings.csv_dir).directory?
 end
 
 p settings
@@ -192,8 +192,8 @@ Example help message:
     Switches:
        --help (-h) - display this help message
     Options:
-       --location (-l) - location name (ex. Dublin, Singapore, Califorina)
-       --csv-dir (-c) [csv] - directory name where CSV file will be storred (relative to jekyll-dir)
+       --location (-l) - location name (ex. Dublin, Singapore, California)
+       --csv-dir (-c) [csv] - directory name where CSV file will be stored (relative to jekyll-dir)
     Arguments:
        jekyll-dir [/var/lib/vhs/jekyll] - directory where site source is located
 
@@ -239,24 +239,24 @@ require 'cli'
 require 'pathname'
 
 settings = CLI.new do
-	description 'Lists content of directories'
-	switch :long, :short => :l, :description => 'use long listing'
-	options :exclude, :short => :e, :description => 'exclude files from listing'
-	arguments :directories, :cast => Pathname, :default => '.', :description => 'directories to list content of'
+        description 'Lists content of directories'
+        switch :long, :short => :l, :description => 'use long listing'
+        options :exclude, :short => :e, :description => 'exclude files from listing'
+        arguments :directories, :cast => Pathname, :default => '.', :description => 'directories to list content of'
 end.parse!
 
 settings.directories.each do |dir|
-	next unless dir.directory?
-	dir.each_entry do |e|
-		next if e.to_s == '.' or e.to_s == '..'
-		e = dir + e
-		next if settings.exclude.include? e.to_s
-		if settings.long
-			puts "#{e.stat.uid}:#{e.stat.gid} #{e}"
-		else
-			puts e
-		end
-	end
+        next unless dir.directory?
+        dir.each_entry do |e|
+                next if e.to_s == '.' or e.to_s == '..'
+                e = dir + e
+                next if settings.exclude.include? e.to_s
+                if settings.long
+                        puts "#{e.stat.uid}:#{e.stat.gid} #{e}"
+                else
+                        puts e
+                end
+        end
 end
 ```
 
@@ -389,7 +389,7 @@ The value after casting (if used) will be available from the `#parse` or `#parse
 In addition to *switch*, option hash can have following pairs:
 
 * **:default => value** - use default value of *value* if the option was not specified on the command argument list. The *value* will firstly be casted to string (with `#to_s`) and then it will be casted if casting is specified.
-* **:default_label => label** - display *label* in usage rather than default value - useful to descirbe default value if default value is generated if no value is provided
+* **:default_label => label** - display *label* in usage rather than default value - useful to describe default value if default value is generated if no value is provided
 * **:cast => cast specifier** - cast the provided value (or default) with given *cast specifier*. 
 The specifier can be a class constant - the value will be provided to `#new` method of the class and resulting object used as option value. When provided constant does not respond to `#new` (i.e. it is a module) the `#load` method will be tried instead. If provided specifier is a Proc (or `lambda {}`) the Proc will be called with the value and resulting value will be used. Otherwise `CLI::ParsingError::CastError` will be raised.  Special cast specified `Integer` or `Float` can also be used - the value will be strictly casted to integer or float type.
 * **:required => true** - if used and no *default* value is specified the `#parse` method will fail with `CLI::ParsingError::MissingOptionValueError` if the option was not specified in the command argument list. If `#parse!` method was used the program will exit with appropriate message.
@@ -440,4 +440,3 @@ Also **:cast => cast specifier** option pair can be used but the value will be a
 
 Copyright (c) 2011 Jakub Pastuszek. See LICENSE.txt for
 further details.
-
